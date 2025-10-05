@@ -291,7 +291,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 575c519e578f13440baa782eaed3bc75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
-  playerTarget: {fileID: 2425095335895045463, guid: e6b24a76f351f2447a956e1ca5dd47a5, type: 3}
+  playerTarget: {fileID: 0}
   attackRange: 7
   leftPupil: {fileID: 8815232932531619144}
   rightPupil: {fileID: 7653095308439501876}
@@ -299,8 +299,9 @@ MonoBehaviour:
   beamEnergyCost: 50
   layersToHit:
     serializedVersion: 2
-    m_Bits: 768
+    m_Bits: 320
   clashEffectPrefab: {fileID: 1337198075554910, guid: ff01d7969f82a8a4283a97aa26f94aeb, type: 3}
+  hitEffectPrefab: {fileID: 2124138437175912245, guid: 5ac8849e777e02d4696c2aeae5585ab3, type: 3}
 --- !u!1 &5409863067515982774
 GameObject:
   m_ObjectHideFlags: 0

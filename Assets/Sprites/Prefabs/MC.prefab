@@ -169,7 +169,7 @@ MonoBehaviour:
   rightPupil: {fileID: 3761268672815974792}
   layersToHit:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 640
   beamPrefab: {fileID: 7667373807354940534, guid: 41841b0f181f4cb4fbde92e742db4325, type: 3}
   beamRange: 7
   damagePerSecond: 20

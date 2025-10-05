@@ -1,9 +1,16 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Unity.Cinemachine;
 
 public class LevelManager : MonoBehaviour
 {
+    public GameObject playerPrefab;
+    public Transform playerSpawnPoint;
+    public Wave[] waves;
+    public Transform enemySpawnPoint;
+    public string nextLevelName;
+    public string endLevelDialog;
+    private CustomCameraFollow cameraFollowScript;
+
     [System.Serializable]
     public class Wave
     {
@@ -11,30 +18,19 @@ public class LevelManager : MonoBehaviour
         public GameObject livingAllyPrefab;
     }
 
-    public GameObject playerPrefab;
-    public Transform playerSpawnPoint;
-    public Wave[] waves;
-    public Transform enemySpawnPoint;
-    public string nextLevelName;
-    public string endLevelDialog;
-    public CinemachineCamera virtualCamera;
-
     private int currentWaveIndex = 0;
     private GameObject currentEnemy;
+    private GameObject playerInstance;
 
     void Start()
     {
-        GameObject playerInstance = Instantiate(playerPrefab, playerSpawnPoint.position, Quaternion.identity);
+        playerInstance = Instantiate(playerPrefab, playerSpawnPoint.position, Quaternion.identity);
 
-        if (virtualCamera == null)
+        cameraFollowScript = FindFirstObjectByType<CustomCameraFollow>();
+        if (cameraFollowScript != null)
         {
-            virtualCamera = FindFirstObjectByType<CinemachineCamera>();
+            cameraFollowScript.playerTarget = playerInstance.transform;
         }
-        if (virtualCamera != null && playerInstance != null)
-        {
-            virtualCamera.Follow = playerInstance.transform;
-        }
-
         StartNextWave();
     }
 
@@ -43,6 +39,12 @@ public class LevelManager : MonoBehaviour
         if (currentWaveIndex < waves.Length)
         {
             currentEnemy = Instantiate(waves[currentWaveIndex].enemyPrefab, enemySpawnPoint.position, Quaternion.identity);
+            EnemyAI ai = currentEnemy.GetComponent<EnemyAI>();
+
+            if (ai != null && playerInstance != null)
+            {
+                ai.SetTarget(playerInstance.transform);
+            }
         }
         else
         {
@@ -53,7 +55,6 @@ public class LevelManager : MonoBehaviour
     public void OnEnemyKilled(Vector3 deathPosition)
     {
         GameObject allyInstance = Instantiate(waves[currentWaveIndex].livingAllyPrefab, deathPosition, Quaternion.identity);
-
         DialogManager.instance.ShowDialog("Thank you for freeing me!", () =>
         {
             currentWaveIndex++;

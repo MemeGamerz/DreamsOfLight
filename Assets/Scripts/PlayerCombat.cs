@@ -32,9 +32,12 @@ public class PlayerCombat : MonoBehaviour
 
     private void Update()
     {
-        if (attackAction.IsPressed() && playerEnergy.currentEnergy > 0)
+        bool wantsToFire = attackAction.IsPressed();
+        float energyCostThisFrame = playerEnergy.energyDrainRate * Time.deltaTime;
+
+        if (wantsToFire && playerEnergy.HasEnoughEnergy(energyCostThisFrame))
         {
-            playerEnergy.ConsumeEnergy(playerEnergy.energyDrainRate * Time.deltaTime);
+            playerEnergy.ConsumeEnergy(energyCostThisFrame);
             ActivateAndAimBeams();
         }
         else
@@ -64,14 +67,11 @@ public class PlayerCombat : MonoBehaviour
         beamInstance.transform.rotation = Quaternion.Euler(0, 0, worldAngle);
         float distanceToMouse = Vector2.Distance(mouseTarget, firePoint.position);
         float effectiveDistance = Mathf.Min(distanceToMouse, beamRange);
-
         RaycastHit2D hitInfo = Physics2D.Raycast(firePoint.position, aimDirection, effectiveDistance, layersToHit);
-
         Vector2 endPoint;
         if (hitInfo.collider != null)
         {
             endPoint = hitInfo.point;
-
             if (hitInfo.collider.gameObject.layer == LayerMask.NameToLayer("EnemyBeam"))
             {
                 if (clashEffectPrefab != null) { Instantiate(clashEffectPrefab, endPoint, Quaternion.identity); }
@@ -87,7 +87,6 @@ public class PlayerCombat : MonoBehaviour
             endPoint = (Vector2)firePoint.position + (aimDirection * effectiveDistance);
             damageTickTimer = 0;
         }
-
         float beamLength = Vector2.Distance(firePoint.position, endPoint);
         SpriteRenderer beamSprite = beamInstance.GetComponent<SpriteRenderer>();
         if (beamSprite != null) { beamSprite.size = new Vector2(beamLength, beamSprite.size.y); }
@@ -103,27 +102,6 @@ public class PlayerCombat : MonoBehaviour
             float energyAmount = damagePerSecond * damageInterval;
             EnemyHealth enemy = target.GetComponent<EnemyHealth>();
             if (enemy != null) enemy.TakeDamage(Mathf.CeilToInt(energyAmount));
-            damageTickTimer = 0;
-        }
-    }
-
-    void HandleHit(GameObject target, bool isDamage)
-    {
-        damageTickTimer += Time.deltaTime;
-        float damageInterval = 1f / 4f;
-        if (damageTickTimer >= damageInterval)
-        {
-            float energyAmount = damagePerSecond * damageInterval;
-            if (isDamage)
-            {
-                EnemyHealth enemy = target.GetComponent<EnemyHealth>();
-                if (enemy != null) enemy.TakeDamage(Mathf.CeilToInt(energyAmount));
-            }
-            else
-            {
-                Ally ally = target.GetComponent<Ally>();
-                if (ally != null) ally.Heal(energyAmount);
-            }
             damageTickTimer = 0;
         }
     }

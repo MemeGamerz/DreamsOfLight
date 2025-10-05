@@ -7,9 +7,7 @@ public class PlayerEnergy : MonoBehaviour
     public float maxEnergy = 1000f;
     public float energyDrainRate = 20f;
     public float energyRegenRate = 10f;
-
     public int startingBoosters = 3;
-
     public SpriteRenderer bodySpriteRenderer;
 
     public float currentEnergy { get; private set; }
@@ -29,7 +27,6 @@ public class PlayerEnergy : MonoBehaviour
     {
         currentEnergy = maxEnergy;
         currentBoosters = startingBoosters;
-
         if (bodySpriteRenderer != null)
         {
             energyMaterial = bodySpriteRenderer.material;
@@ -53,7 +50,6 @@ public class PlayerEnergy : MonoBehaviour
         {
             RegenerateEnergy();
         }
-
         UpdateEnergyVisuals();
     }
 
@@ -68,7 +64,6 @@ public class PlayerEnergy : MonoBehaviour
         {
             currentEnergy = maxEnergy;
             currentBoosters--;
-            Debug.Log("BOOSTER USED! Energy restored. Boosters remaining: " + currentBoosters);
         }
     }
 

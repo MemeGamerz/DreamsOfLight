@@ -3,17 +3,15 @@ using UnityEngine;
 [RequireComponent(typeof(EnemyHealth))]
 public class EnemyAI : MonoBehaviour
 {
-    [Header("Targeting and Range")]
     public Transform playerTarget;
     public float attackRange = 15f;
-
-    [Header("Combat Setup")]
     public Transform leftPupil;
     public Transform rightPupil;
     public GameObject beamPrefab;
     public float beamEnergyCost = 50f;
     public LayerMask layersToHit;
     public GameObject clashEffectPrefab;
+    public GameObject hitEffectPrefab;
 
     private Vector3 originalScale;
     private GameObject activeBeamLeft, activeBeamRight;
@@ -25,33 +23,11 @@ public class EnemyAI : MonoBehaviour
         enemyHealth = GetComponent<EnemyHealth>();
         pupilTrackers = GetComponentsInChildren<EnemyPupilTracker>();
         originalScale = transform.localScale;
-
-        if (playerTarget == null)
-        {
-            GameObject playerObject = GameObject.FindWithTag("Player");
-            if (playerObject != null)
-            {
-                playerTarget = playerObject.transform;
-            }
-        }
-        SetPupilTarget(playerTarget);
     }
 
     void Update()
     {
-        if (playerTarget == null)
-        {
-            GameObject playerObject = GameObject.FindWithTag("Player");
-            if (playerObject != null)
-            {
-                playerTarget = playerObject.transform;
-                SetPupilTarget(playerTarget);
-            }
-            else
-            {
-                return;
-            }
-        }
+        if (playerTarget == null) return;
 
         FlipTowardsTarget();
 
@@ -65,6 +41,12 @@ public class EnemyAI : MonoBehaviour
         {
             DeactivateBeams();
         }
+    }
+
+    public void SetTarget(Transform newTarget)
+    {
+        playerTarget = newTarget;
+        SetPupilTarget(playerTarget);
     }
 
     void FlipTowardsTarget()
@@ -117,6 +99,7 @@ public class EnemyAI : MonoBehaviour
                 {
                     playerEnergy.TakeEnergy(beamEnergyCost * Time.deltaTime);
                 }
+                if (hitEffectPrefab != null) { Instantiate(hitEffectPrefab, endPoint, Quaternion.identity); }
             }
         }
         else
