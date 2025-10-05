@@ -8,37 +8,31 @@ public class LevelManager : MonoBehaviour
     public class Wave
     {
         public GameObject enemyPrefab;
-        public GameObject deadAllyPrefab;
+        public GameObject livingAllyPrefab;
     }
 
+    public GameObject playerPrefab;
+    public Transform playerSpawnPoint;
     public Wave[] waves;
     public Transform enemySpawnPoint;
-    public Transform allySpawnPoint;
     public string nextLevelName;
-
     public string endLevelDialog;
-
     public CinemachineCamera virtualCamera;
 
     private int currentWaveIndex = 0;
     private GameObject currentEnemy;
-    private GameObject currentAllyInstance;
 
     void Start()
     {
+        GameObject playerInstance = Instantiate(playerPrefab, playerSpawnPoint.position, Quaternion.identity);
+
         if (virtualCamera == null)
         {
             virtualCamera = FindFirstObjectByType<CinemachineCamera>();
         }
-
-        GameObject playerObject = GameObject.FindWithTag("Player");
-        if (playerObject != null)
+        if (virtualCamera != null && playerInstance != null)
         {
-            Transform playerInstance = playerObject.transform;
-            if (virtualCamera != null)
-            {
-                virtualCamera.Follow = playerInstance;
-            }
+            virtualCamera.Follow = playerInstance.transform;
         }
 
         StartNextWave();
@@ -48,17 +42,7 @@ public class LevelManager : MonoBehaviour
     {
         if (currentWaveIndex < waves.Length)
         {
-            if (waves[currentWaveIndex].deadAllyPrefab != null)
-            {
-                currentAllyInstance = Instantiate(waves[currentWaveIndex].deadAllyPrefab, allySpawnPoint.position, Quaternion.identity);
-            }
-
-            if (waves[currentWaveIndex].enemyPrefab != null)
-            {
-                currentEnemy = Instantiate(waves[currentWaveIndex].enemyPrefab, enemySpawnPoint.position, Quaternion.identity);
-            }
-
-            Debug.Log("Wave " + (currentWaveIndex + 1) + ": Enemy and fallen ally have appeared!");
+            currentEnemy = Instantiate(waves[currentWaveIndex].enemyPrefab, enemySpawnPoint.position, Quaternion.identity);
         }
         else
         {
@@ -66,20 +50,20 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void OnAllyHealed()
+    public void OnEnemyKilled(Vector3 deathPosition)
     {
-        Debug.Log("Ally Healed! Moving to next wave.");
-        currentWaveIndex++;
+        GameObject allyInstance = Instantiate(waves[currentWaveIndex].livingAllyPrefab, deathPosition, Quaternion.identity);
 
-        if (currentAllyInstance != null) { Destroy(currentAllyInstance); }
-        if (currentEnemy != null) { Destroy(currentEnemy); }
-
-        StartNextWave();
+        DialogManager.instance.ShowDialog("Thank you for freeing me!", () =>
+        {
+            currentWaveIndex++;
+            Destroy(allyInstance);
+            StartNextWave();
+        });
     }
 
     void LevelComplete()
     {
-        Debug.Log("Level Complete!");
         DialogManager.instance.ShowDialog(endLevelDialog, LoadNextLevel);
     }
 

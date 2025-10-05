@@ -7,7 +7,7 @@ public class PupilTracker : MonoBehaviour
 
     private Camera mainCamera;
     private Transform rootTransform;
-    private Vector3 localCenterPosition;
+    private Vector3 localRestingPosition;
 
     void Awake()
     {
@@ -17,15 +17,21 @@ public class PupilTracker : MonoBehaviour
 
     void Start()
     {
-        localCenterPosition = rootTransform.InverseTransformPoint(transform.position);
+        localRestingPosition = rootTransform.InverseTransformPoint(transform.position);
     }
+
+
 
     void Update()
     {
+        if (mainCamera == null) mainCamera = Camera.main;
+        if (mainCamera == null) return;
+
+        Vector3 worldRestingPosition = rootTransform.TransformPoint(localRestingPosition);
         Vector3 mouseWorldPosition = mainCamera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        Vector3 eyeCenterWorld = rootTransform.TransformPoint(localCenterPosition);
-        Vector2 directionToMouse = (mouseWorldPosition - eyeCenterWorld).normalized;
-        Vector2 targetPosition = (Vector2)eyeCenterWorld + (directionToMouse * orbitRadius);
+        Vector2 directionToMouse = (mouseWorldPosition - worldRestingPosition).normalized;
+        Vector2 targetPosition = (Vector2)worldRestingPosition + (directionToMouse * orbitRadius);
+
         transform.position = Vector2.Lerp(transform.position, targetPosition, Time.deltaTime * 15f);
     }
 }

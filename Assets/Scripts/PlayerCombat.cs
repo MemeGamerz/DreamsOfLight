@@ -6,13 +6,10 @@ public class PlayerCombat : MonoBehaviour
 {
     public Transform leftPupil;
     public Transform rightPupil;
-
     public LayerMask layersToHit;
-
     public GameObject beamPrefab;
     public float beamRange = 10f;
     public float damagePerSecond = 20f;
-
     public GameObject hitEffectPrefab;
     public GameObject clashEffectPrefab;
 
@@ -23,10 +20,7 @@ public class PlayerCombat : MonoBehaviour
     private GameObject activeBeamLeft, activeBeamRight;
     private float damageTickTimer;
 
-    public bool IsFiring()
-    {
-        return activeBeamLeft != null;
-    }
+    public bool IsFiring() { return activeBeamLeft != null; }
 
     private void Awake()
     {
@@ -38,11 +32,9 @@ public class PlayerCombat : MonoBehaviour
 
     private void Update()
     {
-        float energyCostThisFrame = playerEnergy.energyDrainRate * Time.deltaTime;
-
-        if (attackAction.IsPressed() && playerEnergy.HasEnoughEnergy(energyCostThisFrame))
+        if (attackAction.IsPressed() && playerEnergy.currentEnergy > 0)
         {
-            playerEnergy.ConsumeEnergy(energyCostThisFrame);
+            playerEnergy.ConsumeEnergy(playerEnergy.energyDrainRate * Time.deltaTime);
             ActivateAndAimBeams();
         }
         else
@@ -86,12 +78,8 @@ public class PlayerCombat : MonoBehaviour
             }
             else if (hitInfo.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             {
-                HandleHit(hitInfo.collider.gameObject, true);
+                DealContinuousDamage(hitInfo.collider.gameObject);
                 if (hitEffectPrefab != null) { Instantiate(hitEffectPrefab, endPoint, Quaternion.identity); }
-            }
-            else if (hitInfo.collider.gameObject.layer == LayerMask.NameToLayer("Ally"))
-            {
-                HandleHit(hitInfo.collider.gameObject, false);
             }
         }
         else
@@ -105,7 +93,7 @@ public class PlayerCombat : MonoBehaviour
         if (beamSprite != null) { beamSprite.size = new Vector2(beamLength, beamSprite.size.y); }
     }
 
-    void HandleHit(GameObject target, bool isDamage)
+    void DealContinuousDamage(GameObject target)
     {
         damageTickTimer += Time.deltaTime;
         float damageInterval = 1f / 4f;
@@ -113,7 +101,19 @@ public class PlayerCombat : MonoBehaviour
         if (damageTickTimer >= damageInterval)
         {
             float energyAmount = damagePerSecond * damageInterval;
+            EnemyHealth enemy = target.GetComponent<EnemyHealth>();
+            if (enemy != null) enemy.TakeDamage(Mathf.CeilToInt(energyAmount));
+            damageTickTimer = 0;
+        }
+    }
 
+    void HandleHit(GameObject target, bool isDamage)
+    {
+        damageTickTimer += Time.deltaTime;
+        float damageInterval = 1f / 4f;
+        if (damageTickTimer >= damageInterval)
+        {
+            float energyAmount = damagePerSecond * damageInterval;
             if (isDamage)
             {
                 EnemyHealth enemy = target.GetComponent<EnemyHealth>();

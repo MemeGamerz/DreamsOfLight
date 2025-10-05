@@ -8,11 +8,8 @@ public class FinalSceneController : MonoBehaviour
     public GameObject lovedOneBody;
     public GameObject lovedOneAlive;
     public GameObject playerExplosionPrefab;
-
     public string playerDialog = "I can fix everyone but not you, I will try my best...";
     public string finalDialog = "You... You saved me. But at what cost?";
-
-    public float delayBeforeExplosion = 2f;
     public float delayAfterExplosion = 2f;
 
     void Start()
@@ -33,16 +30,35 @@ public class FinalSceneController : MonoBehaviour
         DialogManager.instance.ShowDialog(playerDialog, null);
         yield return new WaitUntil(() => !DialogManager.instance.dialogPanel.activeInHierarchy);
 
-        Debug.Log("Player is sacrificing...");
-        yield return new WaitForSeconds(delayBeforeExplosion);
+        Ally lovedOne = lovedOneBody.GetComponent<Ally>();
+        PlayerEnergy energySource = player.GetComponent<PlayerEnergy>();
+
+        if (lovedOne != null && energySource != null)
+        {
+            while (energySource.currentEnergy > 0)
+            {
+                float energyToTransfer = energySource.maxEnergy * Time.deltaTime;
+                energySource.TakeEnergy(energyToTransfer);
+                lovedOne.Heal(energyToTransfer);
+                yield return null;
+            }
+        }
 
         Instantiate(playerExplosionPrefab, player.transform.position, Quaternion.identity);
         Destroy(player);
+    }
 
-        yield return new WaitForSeconds(delayAfterExplosion);
+    public void OnLovedOneHealed()
+    {
+        StartCoroutine(HealingCompleteSequence());
+    }
+
+    private IEnumerator HealingCompleteSequence()
+    {
         lovedOneBody.SetActive(false);
         lovedOneAlive.SetActive(true);
-        Debug.Log("She is alive!");
+
+        yield return new WaitForSeconds(delayAfterExplosion);
 
         DialogManager.instance.ShowDialog(finalDialog, ShowEndScreen);
     }

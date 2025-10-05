@@ -19,16 +19,17 @@ public class EnemyHealth : MonoBehaviour
 
     private void Die()
     {
-        EnemyAI ai = GetComponent<EnemyAI>();
-        if (ai != null)
+        LevelManager levelManager = FindFirstObjectByType<LevelManager>();
+        if (levelManager != null)
         {
-            ai.DeactivateBeams();
+            levelManager.OnEnemyKilled(transform.position);
         }
 
         if (deathParticlesPrefab != null)
         {
             Instantiate(deathParticlesPrefab, transform.position, Quaternion.identity);
         }
+
         Destroy(gameObject);
     }
 }

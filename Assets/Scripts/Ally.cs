@@ -15,11 +15,10 @@ public class Ally : MonoBehaviour
         if (currentEnergy >= energyToHeal)
         {
             isHealed = true;
-
-            LevelManager levelManager = FindFirstObjectByType<LevelManager>();
-            if (levelManager != null)
+            FinalSceneController finalScene = FindFirstObjectByType<FinalSceneController>();
+            if (finalScene != null)
             {
-                levelManager.OnAllyHealed();
+                finalScene.OnLovedOneHealed();
             }
         }
     }
