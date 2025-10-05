@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 
 public class DialogManager : MonoBehaviour
 {
-    public static DialogManager instance;
     public GameObject dialogPanel;
     public TextMeshProUGUI dialogText;
     public GameObject rightClickPrompt;
@@ -14,24 +13,12 @@ public class DialogManager : MonoBehaviour
     public float pulseSpeed = 5f;
     public float pulseAmplitude = 0.05f;
 
-    // This property allows other scripts to safely check if the dialog is open.
-    public bool IsVisible { get { return dialogPanel != null && dialogPanel.activeInHierarchy; } }
-
     private Action onDialogFinished;
     private float timeDialogOpened;
     private Coroutine promptAnimationCoroutine;
 
     void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-
         if (dialogPanel != null)
         {
             dialogPanel.SetActive(false);
@@ -40,10 +27,7 @@ public class DialogManager : MonoBehaviour
 
     public void ShowDialog(string text, Action onFinishedCallback)
     {
-        if (dialogPanel == null)
-        {
-            return;
-        }
+        if (dialogPanel == null) return;
 
         dialogPanel.SetActive(true);
         if (rightClickPrompt != null) rightClickPrompt.SetActive(true);

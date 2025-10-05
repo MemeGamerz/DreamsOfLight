@@ -12,9 +12,11 @@ public class FinalSceneController : MonoBehaviour
     public float delayAfterExplosion = 2f;
 
     private GameObject player;
+    private DialogManager dialogManager;
 
     void Start()
     {
+        dialogManager = FindFirstObjectByType<DialogManager>();
         lovedOneAlive.SetActive(false);
         if (endScreenPanel != null) endScreenPanel.SetActive(false);
     }
@@ -31,22 +33,20 @@ public class FinalSceneController : MonoBehaviour
 
         PlayerEnergy playerEnergy = player.GetComponent<PlayerEnergy>();
         Ally lovedOne = lovedOneBody.GetComponent<Ally>();
-
         if (playerEnergy == null || lovedOne == null) yield break;
 
         player.GetComponent<PlayerController>().enabled = false;
         if (player.GetComponent<PlayerCombat>() != null) player.GetComponent<PlayerCombat>().enabled = false;
 
-        DialogManager.instance.ShowDialog(playerDialog, null);
-        // This line will now work correctly.
-        yield return new WaitUntil(() => !DialogManager.instance.IsVisible);
+        if (dialogManager != null)
+        {
+            dialogManager.ShowDialog(playerDialog, null);
+            yield return new WaitUntil(() => !dialogManager.dialogPanel.activeInHierarchy);
+        }
 
         while (lovedOne.currentEnergy < lovedOne.energyToHeal)
         {
-            if (playerEnergy.currentEnergy <= 0)
-            {
-                break;
-            }
+            if (playerEnergy.currentEnergy <= 0) break;
             float energyToTransfer = playerEnergy.maxEnergy * Time.deltaTime;
             playerEnergy.TakeEnergy(energyToTransfer);
             lovedOne.Heal(energyToTransfer);
@@ -70,7 +70,10 @@ public class FinalSceneController : MonoBehaviour
         lovedOneBody.SetActive(false);
         lovedOneAlive.SetActive(true);
         yield return new WaitForSeconds(delayAfterExplosion);
-        DialogManager.instance.ShowDialog(finalDialog, ShowEndScreen);
+        if (dialogManager != null)
+        {
+            dialogManager.ShowDialog(finalDialog, ShowEndScreen);
+        }
     }
 
     void ShowEndScreen()

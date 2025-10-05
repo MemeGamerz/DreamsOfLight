@@ -10,13 +10,10 @@ public class LevelManager : MonoBehaviour
     public string nextLevelName;
     public string endLevelDialog;
     private CustomCameraFollow cameraFollowScript;
+    private DialogManager dialogManager;
 
     [System.Serializable]
-    public class Wave
-    {
-        public GameObject enemyPrefab;
-        public GameObject livingAllyPrefab;
-    }
+    public class Wave { public GameObject enemyPrefab; public GameObject livingAllyPrefab; }
 
     private int currentWaveIndex = 0;
     private GameObject currentEnemy;
@@ -24,8 +21,8 @@ public class LevelManager : MonoBehaviour
 
     void Start()
     {
+        dialogManager = FindFirstObjectByType<DialogManager>();
         playerInstance = Instantiate(playerPrefab, playerSpawnPoint.position, Quaternion.identity);
-
         cameraFollowScript = FindFirstObjectByType<CustomCameraFollow>();
         if (cameraFollowScript != null)
         {
@@ -40,7 +37,6 @@ public class LevelManager : MonoBehaviour
         {
             currentEnemy = Instantiate(waves[currentWaveIndex].enemyPrefab, enemySpawnPoint.position, Quaternion.identity);
             EnemyAI ai = currentEnemy.GetComponent<EnemyAI>();
-
             if (ai != null && playerInstance != null)
             {
                 ai.SetTarget(playerInstance.transform);
@@ -55,17 +51,40 @@ public class LevelManager : MonoBehaviour
     public void OnEnemyKilled(Vector3 deathPosition)
     {
         GameObject allyInstance = Instantiate(waves[currentWaveIndex].livingAllyPrefab, deathPosition, Quaternion.identity);
-        DialogManager.instance.ShowDialog("Thank you for freeing me!", () =>
+
+        bool isLastWave = (currentWaveIndex >= waves.Length - 1);
+
+        if (isLastWave)
         {
-            currentWaveIndex++;
-            Destroy(allyInstance);
-            StartNextWave();
-        });
+            if (dialogManager != null)
+            {
+                dialogManager.ShowDialog(endLevelDialog, () =>
+                {
+                    Destroy(allyInstance);
+                    LoadNextLevel();
+                });
+            }
+        }
+        else
+        {
+            if (dialogManager != null)
+            {
+                dialogManager.ShowDialog("Thank you for freeing me!", () =>
+                {
+                    currentWaveIndex++;
+                    Destroy(allyInstance);
+                    StartNextWave();
+                });
+            }
+        }
     }
 
     void LevelComplete()
     {
-        DialogManager.instance.ShowDialog(endLevelDialog, LoadNextLevel);
+        if (dialogManager != null)
+        {
+            dialogManager.ShowDialog(endLevelDialog, LoadNextLevel);
+        }
     }
 
     void LoadNextLevel()
