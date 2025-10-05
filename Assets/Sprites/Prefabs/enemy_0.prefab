@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7653095308439501876}
   - component: {fileID: 1125906969252387845}
   - component: {fileID: 1735221743672753873}
-  m_Layer: 9
+  m_Layer: 7
   m_Name: Eye1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -119,7 +119,7 @@ GameObject:
   - component: {fileID: 3905924201021974163}
   - component: {fileID: 5638616673850494502}
   - component: {fileID: 7987545826614404458}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: enemy_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -310,7 +310,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3711927500950270794}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: firepoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -341,7 +341,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 723767144359938762}
-  m_Layer: 9
+  m_Layer: 7
   m_Name: Eyes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -376,7 +376,7 @@ GameObject:
   - component: {fileID: 8815232932531619144}
   - component: {fileID: 1368880779844524269}
   - component: {fileID: 6594226773220629869}
-  m_Layer: 9
+  m_Layer: 7
   m_Name: Eye2
   m_TagString: Untagged
   m_Icon: {fileID: 0}

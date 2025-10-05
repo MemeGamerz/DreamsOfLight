@@ -487,7 +487,7 @@ SortingGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 372819468}
   m_Enabled: 1
-  m_SortingLayerID: -2067072423
+  m_SortingLayerID: -1435039831
   m_SortingLayer: -1
   m_SortingOrder: 0
   m_SortAtRoot: 0
@@ -683,7 +683,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000061035, y: 0}
+  m_AnchoredPosition: {x: 0.000061035156, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &872208708
@@ -770,11 +770,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelManager
   waves:
   - enemyPrefab: {fileID: 1581805985833041320, guid: 5897893e569d1434199b7f37bd6ffcec, type: 3}
-    allyPrefab: {fileID: 992200123354460875, guid: 69682b69be9c75744b3fb5dee2ee73c3, type: 3}
+    deadAllyPrefab: {fileID: 0}
   enemySpawnPoint: {fileID: 221495452}
   allySpawnPoint: {fileID: 592416333}
   nextLevelName: Level2
   endLevelDialog: THANK YOU FOR SAVING ME :)
+  virtualCamera: {fileID: 0}
 --- !u!1 &948443020
 GameObject:
   m_ObjectHideFlags: 0
@@ -789,7 +790,7 @@ GameObject:
   - component: {fileID: 948443024}
   m_Layer: 0
   m_Name: MainCam
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1013,7 +1014,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.9415914, g: 0.9148936, b: 0.03699929, a: 1}
+  m_Color: {r: 0.98884326, g: 0.6540643, b: 0.6540643, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1072,7 +1073,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.07}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -1092,6 +1093,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 15083439444486561, guid: e6b24a76f351f2447a956e1ca5dd47a5, type: 3}
+      propertyPath: layersToHit.m_Bits
+      value: 640
+      objectReference: {fileID: 0}
     - target: {fileID: 117306394986727854, guid: e6b24a76f351f2447a956e1ca5dd47a5, type: 3}
       propertyPath: m_Name
       value: MC
@@ -1102,7 +1107,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2425095335895045463, guid: e6b24a76f351f2447a956e1ca5dd47a5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.21
+      value: -2.99
       objectReference: {fileID: 0}
     - target: {fileID: 2425095335895045463, guid: e6b24a76f351f2447a956e1ca5dd47a5, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1135,6 +1140,14 @@ PrefabInstance:
     - target: {fileID: 2425095335895045463, guid: e6b24a76f351f2447a956e1ca5dd47a5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5349981969590377693, guid: e6b24a76f351f2447a956e1ca5dd47a5, type: 3}
+      propertyPath: m_NotificationBehavior
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6500456312316686657, guid: e6b24a76f351f2447a956e1ca5dd47a5, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1377,7 +1390,7 @@ SortingGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1408292523}
   m_Enabled: 1
-  m_SortingLayerID: -2067072423
+  m_SortingLayerID: -1435039831
   m_SortingLayer: -1
   m_SortingOrder: 0
   m_SortAtRoot: 0
@@ -1425,7 +1438,7 @@ SortingGroup:
   m_GameObject: {fileID: 1593667258}
   m_Enabled: 1
   m_SortingLayerID: -2067072423
-  m_SortingLayer: -1
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortAtRoot: 0
 --- !u!1 &1870100219

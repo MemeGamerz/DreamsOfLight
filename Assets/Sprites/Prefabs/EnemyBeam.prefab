@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1982304367534384080}
   - component: {fileID: 1908163754312983254}
   - component: {fileID: 5727589829773023053}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: EnemyBeam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
