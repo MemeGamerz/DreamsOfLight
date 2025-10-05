@@ -198,11 +198,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcc835327327d4e47a6393b370fcd29d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FinalSceneController
-  player: {fileID: 0}
-  playerEnergy: {fileID: 0}
   lovedOneBody: {fileID: 890792173}
   lovedOneAlive: {fileID: 1721763116}
   playerExplosionPrefab: {fileID: 1121192042590650, guid: c765d7dab91d9d447af2f17f32577db9, type: 3}
+  endScreenPanel: {fileID: 1815597778}
   playerDialog: I can fix everyone but not you, I will try my best...
   finalDialog: You... You saved me. But at what cost?
   delayAfterExplosion: 2
@@ -232,7 +231,7 @@ GameObject:
   - component: {fileID: 342357253}
   - component: {fileID: 342357252}
   - component: {fileID: 342357251}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -369,7 +368,7 @@ GameObject:
   - component: {fileID: 384741902}
   - component: {fileID: 384741901}
   - component: {fileID: 384741900}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -640,7 +639,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 657256940}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Ground&Wlls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1299,7 +1298,7 @@ GameObject:
   - component: {fileID: 1447542781}
   m_Layer: 5
   m_Name: Panel
-  m_TagString: Untagged
+  m_TagString: DialogPanel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1965,7 +1964,7 @@ GameObject:
   - component: {fileID: 1854501529}
   - component: {fileID: 1854501528}
   - component: {fileID: 1854501530}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2020,7 +2019,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

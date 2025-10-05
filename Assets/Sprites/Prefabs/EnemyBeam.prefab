@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1908163754312983254}
   - component: {fileID: 5727589829773023053}
   - component: {fileID: 5628917401531012930}
+  - component: {fileID: -3046316827976950979}
   m_Layer: 9
   m_Name: EnemyBeam
   m_TagString: Untagged
@@ -150,3 +151,16 @@ SortingGroup:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_SortAtRoot: 0
+--- !u!114 &-3046316827976950979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7667373807354940534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5182a4e87efdc6749a5ab82c49550d6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelfDestruct
+  lifetime: 0.1

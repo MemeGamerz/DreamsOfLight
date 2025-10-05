@@ -3,18 +3,20 @@ using UnityEngine;
 
 public class FinalSceneController : MonoBehaviour
 {
-    public GameObject player;
-    public PlayerEnergy playerEnergy;
     public GameObject lovedOneBody;
     public GameObject lovedOneAlive;
     public GameObject playerExplosionPrefab;
+    public GameObject endScreenPanel;
     public string playerDialog = "I can fix everyone but not you, I will try my best...";
     public string finalDialog = "You... You saved me. But at what cost?";
     public float delayAfterExplosion = 2f;
 
+    private GameObject player;
+
     void Start()
     {
         lovedOneAlive.SetActive(false);
+        if (endScreenPanel != null) endScreenPanel.SetActive(false);
     }
 
     public void StartFinalSequence()
@@ -24,28 +26,38 @@ public class FinalSceneController : MonoBehaviour
 
     private IEnumerator FinalSequenceCoroutine()
     {
+        player = GameObject.FindWithTag("Player");
+        if (player == null) yield break;
+
+        PlayerEnergy playerEnergy = player.GetComponent<PlayerEnergy>();
+        Ally lovedOne = lovedOneBody.GetComponent<Ally>();
+
+        if (playerEnergy == null || lovedOne == null) yield break;
+
         player.GetComponent<PlayerController>().enabled = false;
-        player.GetComponent<PlayerCombat>().enabled = false;
+        if (player.GetComponent<PlayerCombat>() != null) player.GetComponent<PlayerCombat>().enabled = false;
 
         DialogManager.instance.ShowDialog(playerDialog, null);
-        yield return new WaitUntil(() => !DialogManager.instance.dialogPanel.activeInHierarchy);
+        // This line will now work correctly.
+        yield return new WaitUntil(() => !DialogManager.instance.IsVisible);
 
-        Ally lovedOne = lovedOneBody.GetComponent<Ally>();
-        PlayerEnergy energySource = player.GetComponent<PlayerEnergy>();
-
-        if (lovedOne != null && energySource != null)
+        while (lovedOne.currentEnergy < lovedOne.energyToHeal)
         {
-            while (energySource.currentEnergy > 0)
+            if (playerEnergy.currentEnergy <= 0)
             {
-                float energyToTransfer = energySource.maxEnergy * Time.deltaTime;
-                energySource.TakeEnergy(energyToTransfer);
-                lovedOne.Heal(energyToTransfer);
-                yield return null;
+                break;
             }
+            float energyToTransfer = playerEnergy.maxEnergy * Time.deltaTime;
+            playerEnergy.TakeEnergy(energyToTransfer);
+            lovedOne.Heal(energyToTransfer);
+            yield return null;
         }
 
-        Instantiate(playerExplosionPrefab, player.transform.position, Quaternion.identity);
-        Destroy(player);
+        if (player != null)
+        {
+            Instantiate(playerExplosionPrefab, player.transform.position, Quaternion.identity);
+            Destroy(player);
+        }
     }
 
     public void OnLovedOneHealed()
@@ -57,14 +69,15 @@ public class FinalSceneController : MonoBehaviour
     {
         lovedOneBody.SetActive(false);
         lovedOneAlive.SetActive(true);
-
         yield return new WaitForSeconds(delayAfterExplosion);
-
         DialogManager.instance.ShowDialog(finalDialog, ShowEndScreen);
     }
 
     void ShowEndScreen()
     {
-        Debug.Log("THE END, THANKS FOR PLAYING!");
+        if (endScreenPanel != null)
+        {
+            endScreenPanel.SetActive(true);
+        }
     }
 }

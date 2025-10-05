@@ -14,6 +14,9 @@ public class DialogManager : MonoBehaviour
     public float pulseSpeed = 5f;
     public float pulseAmplitude = 0.05f;
 
+    // This property allows other scripts to safely check if the dialog is open.
+    public bool IsVisible { get { return dialogPanel != null && dialogPanel.activeInHierarchy; } }
+
     private Action onDialogFinished;
     private float timeDialogOpened;
     private Coroutine promptAnimationCoroutine;
@@ -23,16 +26,25 @@ public class DialogManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
         }
+
+        if (dialogPanel != null)
+        {
+            dialogPanel.SetActive(false);
+        }
     }
 
     public void ShowDialog(string text, Action onFinishedCallback)
     {
+        if (dialogPanel == null)
+        {
+            return;
+        }
+
         dialogPanel.SetActive(true);
         if (rightClickPrompt != null) rightClickPrompt.SetActive(true);
 
@@ -46,7 +58,7 @@ public class DialogManager : MonoBehaviour
 
     void Update()
     {
-        if (!dialogPanel.activeInHierarchy) return;
+        if (dialogPanel == null || !dialogPanel.activeInHierarchy) return;
 
         if (Mouse.current.rightButton.wasPressedThisFrame && Time.time > timeDialogOpened + clickBufferTime)
         {
@@ -61,9 +73,7 @@ public class DialogManager : MonoBehaviour
     private IEnumerator AnimatePrompt()
     {
         if (rightClickPrompt == null) yield break;
-
         Vector3 baseScale = rightClickPrompt.transform.localScale;
-
         while (true)
         {
             float scaleOffset = 1.0f + (Mathf.Sin(Time.time * pulseSpeed) * pulseAmplitude);
