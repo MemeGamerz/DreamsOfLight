@@ -8,10 +8,11 @@ public class FinalSceneController : MonoBehaviour
     public GameObject playerExplosionPrefab;
     public GameObject endScreenPanel;
     public string playerDialog = "I can fix everyone but not you, I will try my best...";
-    public string finalDialog = "You... You saved me. But at what cost?";
+    public string finalDialog = "You... You saved me. I will remember your motto 'Sacrifice Must be made'";
     public float delayAfterExplosion = 2f;
+    public float healingDuration = 3f;
 
-    private GameObject player;
+    private bool sequenceStarted = false;
     private DialogManager dialogManager;
 
     void Start()
@@ -19,57 +20,70 @@ public class FinalSceneController : MonoBehaviour
         dialogManager = FindFirstObjectByType<DialogManager>();
         lovedOneAlive.SetActive(false);
         if (endScreenPanel != null) endScreenPanel.SetActive(false);
+        if (dialogManager != null && dialogManager.dialogPanel != null)
+        {
+            dialogManager.dialogPanel.SetActive(false);
+        }
     }
 
-    public void StartFinalSequence()
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        StartCoroutine(FinalSequenceCoroutine());
+        if (other.CompareTag("Player") && !sequenceStarted)
+        {
+            sequenceStarted = true;
+            StartCoroutine(FinalSequenceCoroutine(other.gameObject));
+        }
     }
 
-    private IEnumerator FinalSequenceCoroutine()
+    private IEnumerator FinalSequenceCoroutine(GameObject player)
     {
-        player = GameObject.FindWithTag("Player");
         if (player == null) yield break;
-
         PlayerEnergy playerEnergy = player.GetComponent<PlayerEnergy>();
-        Ally lovedOne = lovedOneBody.GetComponent<Ally>();
-        if (playerEnergy == null || lovedOne == null) yield break;
+        PlayerCombat playerCombat = player.GetComponent<PlayerCombat>();
+        if (playerEnergy == null || playerCombat == null) yield break;
 
         player.GetComponent<PlayerController>().enabled = false;
-        if (player.GetComponent<PlayerCombat>() != null) player.GetComponent<PlayerCombat>().enabled = false;
+        playerCombat.inCutscene = true;
 
         if (dialogManager != null)
         {
             dialogManager.ShowDialog(playerDialog, null);
-            yield return new WaitUntil(() => !dialogManager.dialogPanel.activeInHierarchy);
+            yield return new WaitUntil(() => dialogManager.dialogPanel == null || !dialogManager.dialogPanel.activeInHierarchy);
         }
 
-        while (lovedOne.currentEnergy < lovedOne.energyToHeal)
+        SpriteRenderer lovedOneRenderer = lovedOneBody.GetComponent<SpriteRenderer>();
+        Material lovedOneMaterial = lovedOneRenderer.material;
+
+        float timer = 0f;
+        while (timer < healingDuration)
         {
-            if (playerEnergy.currentEnergy <= 0) break;
-            float energyToTransfer = playerEnergy.maxEnergy * Time.deltaTime;
+            timer += Time.deltaTime;
+            float energyToTransfer = (playerEnergy.maxEnergy / healingDuration) * Time.deltaTime;
             playerEnergy.TakeEnergy(energyToTransfer);
-            lovedOne.Heal(energyToTransfer);
+            playerCombat.ActivateAndAimBeams(lovedOneBody.transform.position, false);
+
+            if (lovedOneMaterial.HasProperty("_FillAmount"))
+            {
+                // This line is now corrected to drain from 1 to 0.
+                float fillProgress = 1.0f - (timer / healingDuration);
+                lovedOneMaterial.SetFloat("_FillAmount", fillProgress);
+            }
+
             yield return null;
         }
+
+        playerCombat.DeactivateBeams();
 
         if (player != null)
         {
             Instantiate(playerExplosionPrefab, player.transform.position, Quaternion.identity);
             Destroy(player);
         }
-    }
 
-    public void OnLovedOneHealed()
-    {
-        StartCoroutine(HealingCompleteSequence());
-    }
-
-    private IEnumerator HealingCompleteSequence()
-    {
         lovedOneBody.SetActive(false);
         lovedOneAlive.SetActive(true);
         yield return new WaitForSeconds(delayAfterExplosion);
+
         if (dialogManager != null)
         {
             dialogManager.ShowDialog(finalDialog, ShowEndScreen);

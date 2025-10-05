@@ -19,23 +19,17 @@ public class DialogManager : MonoBehaviour
 
     void Awake()
     {
-        if (dialogPanel != null)
-        {
-            dialogPanel.SetActive(false);
-        }
+        if (dialogPanel != null) dialogPanel.SetActive(false);
     }
 
     public void ShowDialog(string text, Action onFinishedCallback)
     {
         if (dialogPanel == null) return;
-
         dialogPanel.SetActive(true);
         if (rightClickPrompt != null) rightClickPrompt.SetActive(true);
-
         dialogText.text = text;
         onDialogFinished = onFinishedCallback;
         timeDialogOpened = Time.time;
-
         if (promptAnimationCoroutine != null) StopCoroutine(promptAnimationCoroutine);
         promptAnimationCoroutine = StartCoroutine(AnimatePrompt());
     }
@@ -43,13 +37,11 @@ public class DialogManager : MonoBehaviour
     void Update()
     {
         if (dialogPanel == null || !dialogPanel.activeInHierarchy) return;
-
         if (Mouse.current.rightButton.wasPressedThisFrame && Time.time > timeDialogOpened + clickBufferTime)
         {
             if (promptAnimationCoroutine != null) StopCoroutine(promptAnimationCoroutine);
             dialogPanel.SetActive(false);
             if (rightClickPrompt != null) rightClickPrompt.SetActive(false);
-
             onDialogFinished?.Invoke();
         }
     }

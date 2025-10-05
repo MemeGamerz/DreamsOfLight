@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 206757297234013001}
   m_Layer: 6
   m_Name: MC
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -165,6 +165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 525e47da68ef7474788f245e51900ee5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
+  inCutscene: 0
   leftPupil: {fileID: 1011056268140885281}
   rightPupil: {fileID: 3761268672815974792}
   layersToHit:
@@ -644,7 +645,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6c45094ebbf9ce644a4c8a92742d1182, type: 2}
+  - {fileID: 2100000, guid: 71c262cbed83ed842a6b7d17501fe5e7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
