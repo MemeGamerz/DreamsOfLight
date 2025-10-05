@@ -204,7 +204,8 @@ MonoBehaviour:
   playerExplosionPrefab: {fileID: 1121192042590650, guid: c765d7dab91d9d447af2f17f32577db9, type: 3}
   endScreenPanel: {fileID: 1815597778}
   playerDialog: I can fix everyone but not you, I will try my best...
-  finalDialog: You... You saved me. But at what cost?
+  finalDialog: You... You saved me. I will remember your motto 'Sacrifice Must be
+    made'
   delayAfterExplosion: 2
   healingDuration: 3
 --- !u!4 &185357881
