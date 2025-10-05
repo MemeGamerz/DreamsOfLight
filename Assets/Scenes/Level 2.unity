@@ -358,8 +358,8 @@ Transform:
   m_GameObject: {fileID: 345243404}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.81219, y: -0.81818, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -1.81219, y: -0.19, z: 0}
+  m_LocalScale: {x: 1, y: 1.1565, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 873835941}
@@ -1144,7 +1144,7 @@ MonoBehaviour:
   - enemyPrefab: {fileID: 1581805985833041320, guid: 5897893e569d1434199b7f37bd6ffcec, type: 3}
     livingAllyPrefab: {fileID: 992200123354460875, guid: 69682b69be9c75744b3fb5dee2ee73c3, type: 3}
   enemySpawnPoint: {fileID: 1815878732}
-  nextLevelName: Level 3
+  nextLevelName: FinalScene
   endLevelDialog: Thanks for freeing me WOOO!
 --- !u!4 &1097364717
 Transform:
@@ -1198,8 +1198,8 @@ Camera:
   m_GameObject: {fileID: 1344890011}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
